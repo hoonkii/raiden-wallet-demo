@@ -22,11 +22,18 @@ class Send extends React.Component{
         this.setState({isModalOpen: false})
     };
 
+    send = () => {
+
+    };
+
     render() {
         return (
             <div className="grid-half">
                 <button className="colored-button" id="sendButton" onClick={this.openModal}>Send</button>
-                <SendModal open={this.state.isModalOpen} closeModal={() => this.closeModal()}/>
+                <SendModal open={this.state.isModalOpen}
+                           closeModal={() => this.closeModal()}
+                           send={() => this.send()}/>
+
             </div>
         )
     }
@@ -46,8 +53,9 @@ class SendModal extends React.Component {
     render() {
         let size = Math.min(document.documentElement.clientWidth, 512) - 90;
         return (
-            <Dialog maxWidth={size} open={this.props.open}>
-                <DialogTitle>Send To Address</DialogTitle>
+            <Dialog open={this.props.open}>
+                <button className="close-button" onClick={this.props.closeModal} >Close</button>
+                <DialogTitle style={{textAlign: "center"}}>Send To Address</DialogTitle>
                 <DialogContent style={{textAlign: "center"}}>
                     <div className="content qr row" style={{cursor: "pointer"}}>
                         <label htmlFor="amount_input">To Address</label>
@@ -59,7 +67,7 @@ class SendModal extends React.Component {
                             <input type="number" className="address-input" placeholder="0.00"/>
                         </div>
                     </div>
-                    <button onClick={this.props.closeModal} >CLOSE</button>
+                    <button id="tokenSendButton" onClick={this.props.send} >Send</button>
                 </DialogContent>
             </Dialog>
         );

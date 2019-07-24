@@ -16,13 +16,7 @@ class Wallet extends React.Component{
                 <AccountDisplay address={this.props.address}/>
 
                 <div className="wallet-body">
-                    <BalanceDisplay type="ethereum" balance={100.00}>
-
-                    </BalanceDisplay>
-                    <hr className="border-line"/>
-                    <BalanceDisplay type="bitcoin" balance={10.00}>
-
-                    </BalanceDisplay>
+                    <BalanceDisplay type="customToken" balance={100.00} />
                     <hr className="border-line"/>
 
                     <div className="wrapper">
@@ -30,14 +24,12 @@ class Wallet extends React.Component{
                             <Receive address={this.props.address}/>
                             <Send/>
                         </div>
-
                         <div className="grid-row">
                             <Link/>
                             <Share/>
                         </div>
-
                         <div className="grid-row">
-                            <Request/>
+                            <Request address={this.props.address} tokenAddress={this.props.tokenAddress}/>
                         </div>
                     </div>
 

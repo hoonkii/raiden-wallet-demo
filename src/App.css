@@ -149,6 +149,16 @@ body {
 #shareButton {
     width: 98%;
 }
+#tokenSendButton{
+    width: 50%;
+    background-color: rgb(188, 42, 141);
+    color: white;
+    border-radius: 5px;
+    box-shadow: 2px 2px 4px #999999;
+    margin-top: 1em;
+    font-size: 16px;
+    opacity: 0.8;
+}
 
 #requestButton {
     width: 99%;
@@ -159,6 +169,7 @@ body {
     border-color: rgb(188, 42, 141);
     color: rgb(188, 42, 141);
     margin-bottom: 10px;
+    opacity: 0.9;
     box-shadow: 2px 2px 4px #999999;
 }
 
@@ -168,16 +179,26 @@ body {
     margin-left: 2em;
 }
 
-.address-input {
-    color: #999999;
-    width: 100%;
-    font-size: 15px;
+.close-button{
+    font-size: 18px;
+    color: white;
+    height: 30px;
+    border-color: rgb(188, 42, 141);
+    box-shadow: 2px 2px 4px #999999;
+    text-align: center;
+    background-color: rgb(188, 42, 141);
+    opacity: 0.9;
 }
 
-.close-button{
-    width: 30px;
-    font-size: 15px;
-    text-align: center;
-    margin-top: 1em;
+.input-group{
+    width: 80%;
+    min-width: 400px;
 }
+
+.address-input {
+    color: #999999;
+    font-size: 15px;
+    width: 100%;
+}
+
 

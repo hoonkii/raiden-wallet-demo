@@ -1,5 +1,5 @@
 {
-  "name": "insta-wallet",
+  "name": "raiden-wallet",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
@@ -7,7 +7,10 @@
     "qrcode.react": "^0.9.3",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
-    "react-scripts": "3.0.1"
+    "react-scripts": "3.0.1",
+    "bignumber.js": "8.1.1",
+    "uuid": "3.3.2",
+    "web3-utils": "1.0.0-beta.55"
   },
   "scripts": {
     "start": "PORT=7777 react-scripts start",
