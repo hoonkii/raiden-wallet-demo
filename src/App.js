@@ -1,23 +1,41 @@
 import React from 'react';
 import './App.css';
-import Wallet from './component/Wallet.js'
+import Wallet from './component/Wallet.js';
+import Web3 from 'web3';
 
-const raidenNodeAddress = "http://141.223.83.34:5001";
-const testAddress = "0x4FED1fC4144c223aE3C1553be203cDFcbD38C581";
-const tokenAddress = "0x4FED1fC4144c223aE3C1553be203cDFcbD38C581";
+const tokenAddresses = ["0xq2erq", "0xqiwjertijqwi"];
+const balance = 50000;
+const minABI = [
+    {
+        "constant": true,
+        "inputs": [{"name": "_owner", "type": "address"}],
+        "name": "balanceOf",
+        "outputs": [{"name": "balance", "type": "uint256"}],
+        "type": "function"
+    },
+    {
+        "constant": true,
+        "inputs": [],
+        "name": "decimals",
+        "outputs": [{"name": "", "type": "uint8"}],
+        "type": "function"
+    }
+];
 
 class App extends React.Component {
 
     constructor(props) {
         super(props);
         this.state = {
-
+            address: process.env.REACT_APP_TEST_ADDRESS,
+            tokenAddresses: tokenAddresses,
+            balance: balance
         };
 
     }
 
     componentDidMount() {
-        this._getRaidenNodeInformation();
+        this._getWalletInformation();
     }
 
     render() {
@@ -37,14 +55,15 @@ class App extends React.Component {
     }
 
     _renderWallet = () => {
-        return <Wallet address={this.state.address} tokenAddresses={this.state.tokenAddresses}/>
+        return <Wallet address={this.state.address} tokenAddress={this.state.tokenAddresses[0]} balance={this.state.balance}/>
     };
 
-    _getRaidenNodeInformation = () => {
+    _getWalletInformation = () => {
         // Wallet Address, token address list, balance 정보
+        const web3 = new Web3(new Web3.providers.HttpProvider(process.env.REACT_APP_ETHEREUM_NODE_ADDRESS));
         const urls = [
-            raidenNodeAddress + '/api/v1/tokens',
-            raidenNodeAddress + '/api/v1/address'
+            process.env.REACT_APP_RAIDEN_NODE_ADDRESS + '/api/v1/tokens',
+            process.env.REACT_APP_RAIDEN_NODE_ADDRESS + '/api/v1/address'
         ];
 
         Promise.all([
@@ -52,10 +71,20 @@ class App extends React.Component {
             fetch(urls[1]),
         ])
             .then(([res1, res2]) => Promise.all([res1.json(), res2.json()]))
-            .then(([data1, data2]) => this.setState({
-                tokenAddresses: data1,
-                address: data2['our_address']
-            }))
+            .then(([data1, data2]) => {
+                this.setState({
+                        tokenAddresses: data1,
+                        address: data2['our_address']
+                    }
+                );
+                let contract = new web3.eth.Contract(minABI, this.state.tokenAddresses[0]);
+                console.log(this.state.address);
+                contract.methods.balanceOf(this.state.address).call((err, result) => {
+                    this.setState({
+                        balance: result
+                    })
+                });
+            })
             .catch(
                 (err) => console.log(err)
             );

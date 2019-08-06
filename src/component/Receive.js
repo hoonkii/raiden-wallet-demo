@@ -58,6 +58,7 @@ class ReceiveModal extends React.Component {
         );
     }
 
+
 }
 
 export default Receive

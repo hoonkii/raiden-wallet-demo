@@ -142,7 +142,7 @@ body {
     width: 98%;
 }
 
-#linkButton {
+#requestButton {
     width: 98%;
 }
 
@@ -160,7 +160,7 @@ body {
     opacity: 0.8;
 }
 
-#requestButton {
+#historyButton {
     width: 99%;
     font-size: 18px;
     border-radius: 5px;
@@ -201,4 +201,20 @@ body {
     width: 100%;
 }
 
+#historyTable{
+    width: 500px;
+    table-layout: fixed;
+}
+
+.history-item-event{
+
+}
+
+.history-item-target{
+
+}
+
+.history-table-head{
+
+}
 

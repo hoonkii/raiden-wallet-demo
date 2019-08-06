@@ -17,16 +17,17 @@ class Request extends React.Component{
 
     render() {
         return (
-            <div className="grid-double-wider">
-                <button id="requestButton" onClick={this.openModal}>Request</button>
+            <div className="grid-half">
+                <button className="bordered-button" id="requestButton" onClick={this.openModal}>Request</button>
                 <RequestModal open={this.state.isModalOpen}
                               closeModal={() => this.closeModal()}
-                              address={this.props.address} generate={() => this.openGenerateInvoiceModal()}/>
+                              address={this.props.address}
+                              generate={() => this.openGenerateInvoiceModal()} handleInputChange={this.handleInputChange}/>
                 <GenerateInvoiceModal open={this.state.isGenerateModalOpen}
                                       closeModal={() => this.closeGenerateInvoiceModal()}
                                       amount={this.state.amount}
                                       address={this.props.address}
-                                      tokenAddress={this.props.tokenAddresses} />
+                                      tokenAddress={this.props.tokenAddress} />
             </div>
         )
     }
@@ -51,6 +52,14 @@ class Request extends React.Component{
             isGenerateModalOpen: false
         });
     };
+
+    handleInputChange = (e) => {
+        console.log(e.target.name);
+        console.log(e.target.value);
+        this.setState({
+            [e.target.name]: e.target.value
+        });
+    }
 }
 
 class RequestModal extends React.Component {
@@ -62,22 +71,16 @@ class RequestModal extends React.Component {
         };
     }
 
-    handleChange = (e) => {
-        this.setState({
-            [e.target.name]: e.target.value
-        });
-    };
-
     render() {
         return (
             <Dialog open={this.props.open}>
-                <button className="close-button" onClick={this.props.close} >Close</button>
+                <button className="close-button" onClick={this.props.closeModal} >Close</button>
                 <DialogTitle style={{textAlign: "center"}}>Request Payment</DialogTitle>
                 <DialogContent style={{textAlign: "center"}}>
                     <div className="content qr row" style={{cursor: "pointer"}}>
-                        <label htmlFor="amount_input">Request amount</label>
+                        <label htmlFor="amount_input">Amount</label>
                         <div className="input-group">
-                            <input name="amount" type="number" className="address-input" placeholder="0.00" onChange={this.handleChange}/>
+                            <input name="amount" type="number" className="address-input" placeholder="0.00" onChange={this.props.handleInputChange}/>
                         </div>
                     </div>
                     <button id="generateButton" onClick={this.props.generate}>Generate Invoice</button>
@@ -93,21 +96,25 @@ class GenerateInvoiceModal extends React.Component{
     constructor(props) {
         super(props);
         this.state = {
-
+            tokenAddress: "0xdqwertwq",
+            address: "0xjiqwjefiq"
         }
     }
 
     componentDidMount() {
+    }
+
+    componentWillReceiveProps(nextProps, nextContext) {
+        this.setState({amount: nextProps.amount});
         var Invoice = require('.././service/invoice');
         var createdInvoice = Invoice.createInvoice({
             network: 4,
             publicKey: '0xE6987CD613Dfda0995A95b3E6acBAbECecd41376',
             operatorAddress: this.props.address,
             tokenAddress: this.props.tokenAddress,
-            amount: this.props.amount
+            amount: this.state.amount
         });
         var encodedInvoice = Invoice.encodeInvoice(createdInvoice);
-        console.log(encodedInvoice);
         this.setState({
             encodedInvoice: encodedInvoice
         });
@@ -128,7 +135,6 @@ class GenerateInvoiceModal extends React.Component{
             </Dialog>
         );
     }
-
 
 }
 

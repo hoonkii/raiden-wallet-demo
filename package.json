@@ -4,13 +4,16 @@
   "private": true,
   "dependencies": {
     "@material-ui/core": "^4.2.0",
+    "bignumber.js": "8.1.1",
     "qrcode.react": "^0.9.3",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
     "react-scripts": "3.0.1",
-    "bignumber.js": "8.1.1",
     "uuid": "3.3.2",
-    "web3-utils": "1.0.0-beta.55"
+    "web3": "^1.2.0",
+    "web3-utils": "1.0.0-beta.55",
+    "instascan": "^1.0.0",
+    "qr-scanner": "^1.1.1"
   },
   "scripts": {
     "start": "PORT=7777 react-scripts start",
