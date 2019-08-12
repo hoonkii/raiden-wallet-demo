@@ -2,7 +2,7 @@ import React from 'react'
 import Dialog from "@material-ui/core/Dialog";
 import {DialogTitle} from "@material-ui/core";
 import DialogContent from "@material-ui/core/DialogContent";
-import Instascan from 'instascan';
+import QrReader from 'react-qr-reader'
 
 class Send extends React.Component {
 
@@ -11,7 +11,6 @@ class Send extends React.Component {
         this.state = {
             isModalOpen: false,
         };
-
     }
 
     openModal = () => {
@@ -28,8 +27,7 @@ class Send extends React.Component {
                 <button className="colored-button" id="sendButton" onClick={this.openModal}>Send</button>
                 <SendModal open={this.state.isModalOpen}
                            closeModal={() => this.closeModal()}
-                           send={() => this.send()}/>
-
+                           send={() => this.send()} tokenAddress={this.props.tokenAddress}/>
             </div>
         )
     }
@@ -43,28 +41,43 @@ class SendModal extends React.Component {
         console.log(props);
         this.state = {
             open: props.open,
-            sendAddress: null
+            sendAddress: '',
+            amount: 0
         };
     }
 
     send = () => {
-        fetch({
-            url: process.env.REACT_APP_RAIDEN_NODE_ADDRESS + "/api/v1/payments/" + this.props.tokenAddress + "/" + this.state.sendAddress,
-            method: 'POST'
-        }).then(function (res) {
-            if (res.ok) {
-                res.json().then(function (data) {
-                    console.log(data.entries);
-                    alert('payment success to ' + data['target_address'] + 'amount : ' + data['amount'])
-                });
-            } else {
-                console.log("Looks like the response wasn't perfect, got status", res.status);
+        fetch(process.env.REACT_APP_RAIDEN_NODE_ADDRESS + "/api/v1/payments/" + this.props.tokenAddress + "/" + this.state.sendAddress, {
+            method: 'POST',
+            body: JSON.stringify({amount: this.state.amount})
+        }).then(function (response) {
+            if (!response.ok){
+                throw Error(response.statusText);
+            }else{
+                return response.json()
             }
-        }, function (e) {
-            console.log("Fetch failed!", e);
-            alert('payment request is failed')
-        });
+        }).then((data) => {
+            alert('payment success to ' + data['target_address'] + ' amount : ' + data['amount'])
+        }).catch(err => console.log(err));
         this.props.closeModal()
+    };
+
+    handleChange = (e) => {
+        this.setState({
+            [e.target.name]: e.target.value
+        })
+    };
+
+    handleScan = (data) => {
+        if (data) {
+            this.setState({
+                result: data
+            })
+        }
+    };
+
+    handleError = (err) => {
+        console.error(err)
     };
 
     render() {
@@ -75,14 +88,21 @@ class SendModal extends React.Component {
                 <DialogContent style={{textAlign: "center"}}>
                     <div className="content qr row" style={{cursor: "pointer"}}>
                         <label htmlFor="amount_input">To Address</label>
+                        <QrReader
+                            delay={300}
+                            onError={this.handleError}
+                            onScan={this.handleScan}
+                            style={{ width: '100%' }}
+                        />
+                        <p>{this.state.result}</p>
                         <div className="input-group">
-                            <input type="text" className="address-input" placeholder="0x..."
-                                   value={this.state.sendAddress}/>
+                            <input name="sendAddress" type="text" className="address-input" placeholder="0x..."
+                                   value={this.state.sendAddress} onChange={this.handleChange}/>
                         </div>
-                        <button onClick={this.openCamera}/>
                         <label htmlFor="amount_input">Send Amount</label>
                         <div className="input-group">
-                            <input type="number" className="address-input" placeholder="0.00"/>
+                            <input name="amount" type="number" className="address-input" placeholder="0.00"
+                            onChange={this.handleChange}/>
                         </div>
                     </div>
                     <button id="tokenSendButton" onClick={this.send}>Send</button>
@@ -91,23 +111,6 @@ class SendModal extends React.Component {
         );
     }
 
-    // openCamera = () => {
-    //     let scanner = new Instascan.Scanner({video: document.getElementById('preview')});
-    //     var _this = this;
-    //     scanner.addListener('scan', function (content) {
-    //         console.log(content);
-    //         _this.state.sendAddress = content;
-    //     });
-    //     Instascan.Camera.getCameras().then(function (cameras) {
-    //         if (cameras.length > 0) {
-    //             scanner.start(cameras[0]);
-    //         } else {
-    //             console.error('No cameras found.');
-    //         }
-    //     }).catch(function (e) {
-    //         console.error(e);
-    //     });
-    // }
 
 }
 

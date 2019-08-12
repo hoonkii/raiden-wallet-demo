@@ -4412,6 +4412,11 @@ fd-slicer@~1.1.0:
   dependencies:
     pend "~1.2.0"
 
+fetch-timeout@0.0.2:
+  version "0.0.2"
+  resolved "https://registry.yarnpkg.com/fetch-timeout/-/fetch-timeout-0.0.2.tgz#f59beb2269359ce84da07ae614da360109c25338"
+  integrity sha1-9ZvrImk1nOhNoHrmFNo2AQnCUzg=
+
 figgy-pudding@^3.5.1:
   version "3.5.1"
   resolved "https://registry.yarnpkg.com/figgy-pudding/-/figgy-pudding-3.5.1.tgz#862470112901c727a0e495a80744bd5baa1d6790"
